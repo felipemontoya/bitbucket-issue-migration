@@ -79,3 +79,22 @@ Within a comment:
 * Adapt `config.py` to correctly capture the Bitbucket repos, their GitHub correspondance, and the number of issues
 * Run `python3 migrate-discussions.py --github-access-token <GitHub access token> --bitbucket-repository <e.g. viperproject/silver> --github-repository <e.g. viperproject/silver>` to migrate the issues and pull requests (again for all repositories)
 
+
+##
+
+git clone --mirror git@bitbucket.org:edunext/scytale.git
+cd scytale
+git push --mirror git@github.com:eduNEXT/scytale.git
+git log --all --format='%H,%H' > cmap.txt
+python3 migrate-discussions.py --github-access-token ghp_1234 --bitbucket-repository edunext/scytale --github-repository edunext/scytale --bitbucket-username felipem_ntoya --bitbucket-password 6798
+
+
+
+
+git clone --mirror git@bitbucket.org:edunext/scripted_recipes.git
+cd scripted_recipes
+git push --mirror git@github.com:eduNEXT/scripted_recipes.git
+git log --all --format='%H,%H' > cmap.txt
+
+python3 migrate-discussions.py --github-access-token ghp_1234 --bitbucket-repository edunext/scytale --github-repository edunext/scytale --bitbucket-username felipem_ntoya --bitbucket-password 6798
+

@@ -121,23 +121,44 @@ class GithubImport:
 
     def update_issue_with_comments(self, issue, issue_data):
         meta = issue_data["issue"]
-        issue.edit(
-            title=meta["title"],
-            body=meta["body"],
-            labels=meta["labels"],
-            state="closed" if meta["closed"] else "open",
-            assignees=[] if meta["assignee"] is None else [meta["assignee"]]
-        )
+        try:
+            issue.edit(
+                title=meta["title"],
+                body=meta["body"],
+                labels=meta["labels"],
+                state="closed" if meta["closed"] else "open",
+                assignees=[] if meta["assignee"] is None else [meta["assignee"]]
+            )
+        except Exception as e:
+            sleep(5) # so retrying does not become an issue
+            issue.edit(
+                title=meta["title"],
+                body=meta["body"],
+                labels=meta["labels"],
+                state="closed" if meta["closed"] else "open",
+                assignees=[]
+            )
+
+
         self.update_issue_comments(issue, issue_data["comments"])
 
     def slow_create_issue_with_comments(self, issue_data):
         meta = issue_data["issue"]
-        issue = self.repo.create_issue(
-            title=meta["title"],
-            body=meta["body"],
-            labels=meta["labels"],
-            assignees=[] if meta["assignee"] is None else [meta["assignee"]]
-        )
+        try:
+            issue = self.repo.create_issue(
+                title=meta["title"],
+                body=meta["body"],
+                labels=meta["labels"],
+                assignees=[] if meta["assignee"] is None else [meta["assignee"]]
+            )
+        except Exception as e:
+            sleep(5) # so retrying does not become an issue
+            issue = self.repo.create_issue(
+                title=meta["title"],
+                body=meta["body"],
+                labels=meta["labels"],
+                assignees=[]
+            )
         issue.edit(state="closed" if meta["closed"] else "open")
         self.update_issue_comments(issue, issue_data["comments"])
 
